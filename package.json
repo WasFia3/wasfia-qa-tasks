@@ -1,0 +1,24 @@
+{
+  "name": "wasfia-qa-tasks",
+  "version": "1.0.0",
+  "description": "",
+  "main": "cypress.config.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/WasFia3/wasfia-qa-tasks.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/WasFia3/wasfia-qa-tasks/issues"
+  },
+  "homepage": "https://github.com/WasFia3/wasfia-qa-tasks#readme",
+  "devDependencies": {
+    "cypress": "^15.17.0"
+  }
+}
