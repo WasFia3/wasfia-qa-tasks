@@ -1,10 +1,14 @@
 {
   "name": "wasfia-qa-tasks",
   "version": "1.0.0",
-  "description": "",
+  "description": "QA automation tasks - Final Task: Trello with Cypress + Cucumber + POM",
   "main": "cypress.config.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "cy:open": "cypress open",
+    "cy:run": "cypress run",
+    "test:trello": "cypress run --spec \"cypress/e2e/features/**/*.feature\"",
+    "test:smoke": "cypress run --spec \"cypress/e2e/features/**/*.feature\" --env tags=@smoke",
+    "test:regression": "cypress run --spec \"cypress/e2e/features/**/*.feature\" --env tags=@regression"
   },
   "repository": {
     "type": "git",
@@ -19,6 +23,14 @@
   },
   "homepage": "https://github.com/WasFia3/wasfia-qa-tasks#readme",
   "devDependencies": {
-    "cypress": "^15.17.0"
+    "@badeball/cypress-cucumber-preprocessor": "^26.0.0",
+    "@bahmutov/cypress-esbuild-preprocessor": "^2.2.8",
+    "cypress": "^15.17.0",
+    "esbuild": "^0.28.1"
+  },
+  "cypress-cucumber-preprocessor": {
+    "stepDefinitions": [
+      "cypress/e2e/step_definitions/**/*.js"
+    ]
   }
 }

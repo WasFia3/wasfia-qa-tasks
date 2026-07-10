@@ -1,5 +1,8 @@
 describe('Automation Exercise - Comprehensive Test Suite', () => {
 
+  // Base URL of this task's website (the global baseUrl now points to Trello for the final task)
+  const BASE = 'https://automationexercise.com';
+
   // Defining state variables outside so they persist across tests during the run
   let username;
   let email;
@@ -15,7 +18,7 @@ describe('Automation Exercise - Comprehensive Test Suite', () => {
 
   // Test Case 1: Handle the signup process and create a new user profile
   it('1. Should successfully register a new user', () => {
-    cy.visit('/', { failOnStatusCode: false });
+    cy.visit(`${BASE}/`, { failOnStatusCode: false });
     cy.get('a[href="/login"]').click();
     
     cy.get('.signup-form').should('be.visible');
@@ -49,19 +52,19 @@ describe('Automation Exercise - Comprehensive Test Suite', () => {
 
   // Test Case 2: Verify existing user login functionality
   it('2. Should log in successfully with valid credentials', () => {
-    cy.visit('/login', { failOnStatusCode: false });
+    cy.visit(`${BASE}/login`, { failOnStatusCode: false });
     
     cy.get('[data-qa="login-email"]').should('be.visible').type(email);
     cy.get('[data-qa="login-password"]').type(password);
     cy.get('[data-qa="login-button"]').click();
 
-    // Verifying it contains the exact frozen username
+    // Verifying it contains the exact username
     cy.get('header', { timeout: 10000 }).should('contain', `Logged in as ${username}`);
   });
 
   // Test Case 3: Test the search bar with both realistic and non-existent products
   it('3. Should search for products using valid and invalid names', () => {
-    cy.visit('/products', { failOnStatusCode: false });
+    cy.visit(`${BASE}/products`, { failOnStatusCode: false });
 
     cy.get('#search_product').type('Shirt');
     cy.get('#submit_search').click();
@@ -76,14 +79,13 @@ describe('Automation Exercise - Comprehensive Test Suite', () => {
 
   // Test Case 4: Verify adding a product to the shopping cart
   it('4. Should add a product to the cart from the details page', () => {
-    cy.visit('/products', { failOnStatusCode: false });
+    cy.visit(`${BASE}/products`, { failOnStatusCode: false });
     
     cy.get('.choose > .nav > li > a').first().click();
     cy.url().should('include', '/product_details/');
 
     cy.get('#quantity').clear().type('2');
-    y.get('button.cart').click({ force: true }); // Force click in case of any overlay issues
-    cy.get('button.cart').click();
+    cy.get('button.cart').click({ force: true }); // Force click in case of any overlay issues
 
     cy.get('.modal-confirm').should('be.visible');
     cy.get('u').contains('View Cart').click();
@@ -93,12 +95,12 @@ describe('Automation Exercise - Comprehensive Test Suite', () => {
 
   // Test Case 5: Verify that logged-in users can write a review on a product
   it('5. Should allow a user to add a review to a product', () => {
-    cy.visit('/login', { failOnStatusCode: false });
+    cy.visit(`${BASE}/login`, { failOnStatusCode: false });
     cy.get('[data-qa="login-email"]').type(email);
     cy.get('[data-qa="login-password"]').type(password);
     cy.get('[data-qa="login-button"]').click();
 
-    cy.visit('/product_details/1', { failOnStatusCode: false }); 
+    cy.visit(`${BASE}/product_details/1`, { failOnStatusCode: false });
 
     cy.get('#name').type(username);
     cy.get('#email').type(email);
