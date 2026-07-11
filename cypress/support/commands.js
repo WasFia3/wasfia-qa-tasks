@@ -1,26 +1,26 @@
-import loginPage from '../pages/LoginPage'
-
-// Logs in to Trello once and caches the session cookies across all specs,
-// so every scenario starts already authenticated (fast + stable).
+// Logs in to Trello by restoring the session cookies captured once by
+// cypress/e2e/loginSetup.cy.js (see that file for why). The session is
+// cached across all specs, and validated against the Trello API.
 Cypress.Commands.add('loginToTrello', () => {
-  const email = Cypress.env('TRELLO_EMAIL')
-  const password = Cypress.env('TRELLO_PASSWORD')
-
-  if (!email || !password) {
-    throw new Error(
-      'Missing TRELLO_EMAIL / TRELLO_PASSWORD. Create cypress.env.json (see cypress.env.json.example)'
-    )
-  }
-
   cy.session(
-    `trello-${email}`,
+    'trello-session',
     () => {
-      loginPage.login(email, password)
+      cy.readFile('cypress/fixtures/trelloSession.json').then((cookies) => {
+        cookies.forEach((cookie) => {
+          cy.setCookie(cookie.name, cookie.value, {
+            domain: cookie.domain,
+            path: cookie.path,
+            secure: cookie.secure,
+            httpOnly: cookie.httpOnly,
+            expiry: cookie.expiry,
+          })
+        })
+      })
     },
     {
       cacheAcrossSpecs: true,
       validate() {
-        // The session is valid as long as Trello still recognises our cookies
+        // Session is valid as long as Trello recognises our cookies
         cy.request({
           url: 'https://trello.com/1/members/me',
           failOnStatusCode: false,

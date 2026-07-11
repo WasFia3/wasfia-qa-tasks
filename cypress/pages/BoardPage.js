@@ -1,24 +1,34 @@
 // Page Object for a Trello board (lists + cards view)
+// All data-testid selectors verified against the live Trello DOM.
 
 class BoardPage {
   elements = {
-    board: '[data-testid="board"]',
+    boardCanvas: '[data-testid="board-canvas"]',
     list: '[data-testid="list"]',
     listName: '[data-testid="list-name"]',
     card: '[data-testid="trello-card"]',
     cardName: '[data-testid="card-name"]',
+    acceptCookiesButton: '[data-testid="accept-all-button"]',
     // template creation flow (list footer)
-    createFromTemplateButton: '[data-testid="list-add-card-from-template-button"]',
-    newTemplateButton: 'button:contains("Create a new template")',
-    cardComposerTextarea: '[data-testid="list-card-composer-textarea"]',
-    addCardButton: '[data-testid="list-card-composer-add-card-button"]',
+    createFromTemplateButton: '[data-testid="card-template-list-button"]',
+    newTemplateButton: '[data-testid="create-new-template-card-button"]',
   }
 
   // Opens a board by its url and waits until the lists are rendered
   open(boardUrl) {
     cy.visit(boardUrl)
-    cy.get(this.elements.board, { timeout: 30000 }).should('be.visible')
+    cy.get(this.elements.boardCanvas, { timeout: 30000 }).should('be.visible')
     cy.get(this.elements.list, { timeout: 30000 }).should('be.visible')
+    this.dismissCookieBannerIfPresent()
+  }
+
+  // The Atlassian cookie-consent banner overlays the board on fresh sessions
+  dismissCookieBannerIfPresent() {
+    cy.get('body').then(($body) => {
+      if ($body.find(this.elements.acceptCookiesButton).length) {
+        cy.get(this.elements.acceptCookiesButton).click()
+      }
+    })
   }
 
   // Part 2 of the task: full page screenshot of the opened board
@@ -40,7 +50,7 @@ class BoardPage {
 
   // Opens the card window (card back) of the given card
   openCard(cardName) {
-    this.getCard(cardName).click()
+    cy.contains(this.elements.cardName, cardName, { timeout: 15000 }).click()
   }
 
   // Creates a card template through the list footer "Create from template" flow
@@ -48,10 +58,9 @@ class BoardPage {
     this.getList(listName).within(() => {
       cy.get(this.elements.createFromTemplateButton).click()
     })
-    cy.contains('button', 'Create a new template').click()
-    cy.get(this.elements.cardComposerTextarea).type(templateName)
-    cy.get(this.elements.addCardButton).click()
-    // close the composer / template editor if it stays open
+    cy.get(this.elements.newTemplateButton, { timeout: 10000 }).click()
+    // the new-template composer focuses its title textarea; Enter submits
+    cy.focused().type(`${templateName}{enter}`)
     cy.get('body').type('{esc}')
   }
 
