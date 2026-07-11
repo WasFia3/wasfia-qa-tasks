@@ -1,7 +1,12 @@
 # Wasfia QA Tasks
 
-Cypress automation tasks. The final task automates **Trello** (https://trello.com)
-using **Cucumber (Gherkin)** and the **Page Object Model (POM)** design pattern.
+Cypress automation tasks.
+
+- **Task 3** ([task3-saucedemo/](task3-saucedemo/)) automates **SauceDemo**
+  (https://www.saucedemo.com) — Login, Checkout, and Logout flows — using
+  **Cucumber (Gherkin)** and the **Page Object Model (POM)** design pattern.
+- The **Final Task** (this root project) automates **Trello** (https://trello.com)
+  using **Cucumber (Gherkin)** and the **Page Object Model (POM)** design pattern.
 
 ## Final Task structure
 
